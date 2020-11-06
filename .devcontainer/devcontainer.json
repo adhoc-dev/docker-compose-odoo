@@ -1,0 +1,49 @@
+// https://code.visualstudio.com/docs/remote/create-dev-container
+{
+    // ==> ## General ##
+    // A display name for the container.
+    "name": "Odoo-AdHoc Dev",
+    // An array of extension IDs that specify the extensions that should be installed inside the container when it is created. Defaults to [].
+    "extensions": ["pylint","flake8","pycodestyle"],
+    // An array of ports that should be forwarded from inside the container to the local machine.
+    "forwardPorts": [8069,8072],
+    // A command string or list of command arguments to run inside the container after is created.
+//    "postCreateCommand":["mv src/* src1 && rm -R src && ln -s src1 src"],
+
+    // ==> ## Docker Compose ##
+    // Required. Path or an ordered list of paths to Docker Compose
+    "dockerComposeFile": "../docker-compose.yml",
+    // Required. The name of the service VS Code should connect to once running.
+    "service": "odoo",
+    // Sets the default path that VS Code should open when connecting to the container (which is often the path to a volume mount where the source code can be found in the container). Defats to "/".
+    "workspaceFolder": "/home/odoo/",
+    // Indicates whether VS Code should stop the containers when the VS Code window is closed / shut down.
+    "shutdownAction": "stopCompose",
+
+    // ==> ## Dockerfile or image ##
+    // "build": {
+    //     "dockerfile": "Dockerfile"
+    // },
+
+    // Set *default* container specific settings.json values on container create.
+	"settings": {
+		"terminal.integrated.shell.linux": null
+	},
+
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [],
+
+	// Uncomment the next line if you want start specific services in your Docker Compose config.
+	// "runServices": [],
+
+	// Uncomment the next line if you want to keep your containers running after VS Code shuts down.
+	// "shutdownAction": "none",
+
+	// Uncomment the next line to run commands after the container is created - for example installing curl.
+	// "postCreateCommand": "apt-get update && apt-get install -y curl",
+
+	// Uncomment to connect as a non-root user if you've added one. See https://aka.ms/vscode-remote/containers/non-root.
+	// "remoteUser": "vscode"
+
+}
+
