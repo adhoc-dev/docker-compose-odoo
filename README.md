@@ -19,10 +19,10 @@ You can find documentation [here](https://docs.google.com/document/d/1nuX99v_ncf
 * https://github.com/oondeo/docker-odoo
 * https://github.com/allamand/docker-vscode
 
-## Dev
+## You can find documentation here
 
-[link](https://code.visualstudio.com/docs/remote/create-dev-container)
-[link](https://code.visualstudio.com/docs/remote/devcontainerjson-reference)
+[Container](https://code.visualstudio.com/docs/remote/create-dev-container)  
+[devcontainer](https://code.visualstudio.com/docs/remote/devcontainerjson-reference)
 
 ## Run
 
@@ -32,7 +32,7 @@ Extensión: ms-vscode-remote.remote-containers
 code --install-extension ms-vscode-remote.remote-container
 ```
 
-F1 => `Remote-Containers: Rebuild and Reopen in container`
+F1 => `Remote-Containers: Rebuild and Reopen in container`  
 F1 => `Remote-Containers: Reopen in container`
 
 Para Volver al archivo de configuracion
