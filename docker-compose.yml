@@ -12,11 +12,12 @@ services:
         network_mode: "bridge"
     odoo:
         # user: root
-        # build:
-        #     context: ./data
-        #     dockerfile: Dockerfile
-        image: $ODOO_IMAGE:$ODOO_MINOR
+        build:
+            context: .
+            dockerfile: Dockerfile
+        # image: $ODOO_IMAGE:$ODOO_MINOR
         external_links:
+            - traefik:traefik
             - aeroo:aeroo
         # si usamos network_mode entonces el depends_on no funciona, necesitamos link
         # depends_on:
@@ -30,15 +31,14 @@ services:
             - odoo_data:/home/odoo/data
         labels:
             - traefik.enable=true
-            - traefik.frontend.port=8069
-            - traefik.frontend.rule=HostRegexp:$DOMAIN,{subdomain:[a-z0-9-_]+}.$DOMAIN
-            - traefik.frontend.priority=$TRAEFIK_FRONTEND_PRIORITY
-            # - traefik.longpolling.port=8072
-            # - traefik.longpolling.frontend.rule=HostRegexp:$DOMAIN,{subdomain:[a-z0-9-_]+}.$DOMAIN;PathPrefix:/longpolling/
-            - traefik.backend.loadbalancer.stickiness=true
-            - traefik.backend.loadbalancer.method=drr
-            # traefik.frontend.redirect.regex: $strTraefikRedirectRegex
-            # traefik.frontend.redirect.replacement: $strTraefikRedirectReplacement
+            - traefik.http.routers.odoo.rule=HostRegexp(`${DOMAIN}`,`{subdomain:[a-z]+}.${DOMAIN}`)
+            - traefik.http.services.odoo.loadbalancer.server.port=8069
+            - traefik.http.routers.odoo.entrypoints=web
+        dns:
+            - 172.20.0.10
+        networks:
+            adhoc:
+                ipv4_address: 172.20.0.5
         environment:
             CUSTOM_CONFIG: |-
                 [options]
@@ -50,10 +50,16 @@ services:
                 # pip install --user --no-cache-dir pyopenssl
         env_file:
             - .env
-        network_mode: "bridge"
         # para, por ejemplo, odoo-saas. para que el container resuelva tmb .localhost en esta ip
-        dns: 172.17.0.1
 volumes:
     pg_data:
     odoo_data:
     default:
+
+networks:
+    adhoc:
+        external: true
+        name: adhoc
+        # ipam:
+        #     config:
+        #         - subnet: 172.20.0.0/24
