@@ -1,4 +1,4 @@
-version: '2.1'
+version: "3.9"
 services:
     db:
         image: postgres:12
@@ -9,22 +9,15 @@ services:
             - PGDATA=/var/lib/postgresql/data/pgdata
         volumes:
             - pg_data:/var/lib/postgresql/data/pgdata
-        network_mode: "bridge"
+        networks:
+            adhoc:
+
     odoo:
-        # user: root
-        build:
-            context: .
-            dockerfile: Dockerfile
-        # image: $ODOO_IMAGE:$ODOO_MINOR
+        image: $ODOO_IMAGE:$ODOO_MINOR
         external_links:
             - traefik:traefik
-            - aeroo:aeroo
-        # si usamos network_mode entonces el depends_on no funciona, necesitamos link
-        # depends_on:
-        #     # - proxy
-        #     - db
-        links:
-            - db:db
+        depends_on:
+            - db
         volumes:
             - ./data/custom:/home/odoo/custom
             - default:/home/odoo/src
@@ -39,18 +32,6 @@ services:
         networks:
             adhoc:
                 ipv4_address: 172.20.0.5
-        environment:
-            CUSTOM_CONFIG: |-
-                [options]
-            CUSTOM_REQUIREMTNS: |-
-                # custom pip librearies
-            CUSTOM_ENTRYPOINT: |-
-                #!/bin/bash
-                # pip install --user --no-cache-dir -e /home/odoo/custom/odoo
-                # pip install --user --no-cache-dir pyopenssl
-        env_file:
-            - .env
-        # para, por ejemplo, odoo-saas. para que el container resuelva tmb .localhost en esta ip
 volumes:
     pg_data:
     odoo_data:
@@ -60,6 +41,3 @@ networks:
     adhoc:
         external: true
         name: adhoc
-        # ipam:
-        #     config:
-        #         - subnet: 172.20.0.0/24
